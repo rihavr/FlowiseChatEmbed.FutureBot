@@ -64,6 +64,10 @@ export type LeadsConfig = {
     phone?: boolean;
     successMessage?: string;
 };
+export declare const setIsTyping: (value: any) => void;
+export declare const getIsTyping: () => boolean;
+export declare const addIsTypingListener: (fn: any) => void;
+export declare const removeIsTypingListener: (fn: any) => void;
 export declare const Bot: (botProps: BotProps & {
     class?: string;
 }) => import("solid-js").JSX.Element;

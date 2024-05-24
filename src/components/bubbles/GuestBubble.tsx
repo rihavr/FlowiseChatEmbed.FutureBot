@@ -19,7 +19,7 @@ const defaultBackgroundColor = '#3B81F6';
 const defaultTextColor = '#ffffff';
 const defaultFontSize = 16;
 
-Marked.setOptions({ isNoP: true, sanitize: true });
+Marked.setOptions({ isNoP: true, sanitize: false });
 
 function processMessage(originalMessage) {
     //note: same in BotBubble

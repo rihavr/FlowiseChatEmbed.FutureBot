@@ -7,6 +7,8 @@ export type IncomingInput = {
     chatId?: string;
     fileName?: string;
     leadEmail?: string;
+    webRequestChatId?: string;
+    timezone?: string;
 };
 export type MessageRequest = {
     chatflowid?: string;

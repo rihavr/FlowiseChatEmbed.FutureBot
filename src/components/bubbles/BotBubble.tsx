@@ -25,7 +25,7 @@ const defaultBackgroundColor = '#f7f8ff';
 const defaultTextColor = '#303235';
 const defaultFontSize = 16;
 
-Marked.setOptions({ isNoP: true, sanitize: true});
+Marked.setOptions({ isNoP: true, sanitize: false});
 
 function processMessage(originalMessage) {
     //note: same in GuestBubble
