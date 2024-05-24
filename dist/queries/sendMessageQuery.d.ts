@@ -7,6 +7,8 @@ export type IncomingInput = {
     socketIOClientId?: string;
     chatId?: string;
     fileName?: string;
+    webRequestChatId?: string;
+    timezone?: string;
 };
 export type MessageRequest = {
     chatflowid?: string;

@@ -21,12 +21,61 @@ const defaultFontSize = 16;
 
 Marked.setOptions({ isNoP: true });
 
+function processMessage(originalMessage) {
+    //note: same in BotBubble
+
+    // Split the original message into lines
+    const lines = originalMessage.split("\n");
+    let processedLines = [];
+    let previousLineWasListItem = false;
+    let firstNumberedItem = true;
+    let validList = false;
+
+    lines.forEach((line, index) => {
+        // Check if the line is likely part of a numbered list
+        if (/^\d+\.\s+/.test(line)) {
+            let currentNumber = parseInt(line.match(/^\d+/)[0], 10);
+
+            if (firstNumberedItem) {
+                validList = (currentNumber === 1);
+                firstNumberedItem = false;
+            }
+
+            if (!validList) {
+                line = line.replace(/^(\d+)\./, '$1.​');
+                previousLineWasListItem = false;
+            } else {
+                let expectedNextNumber = currentNumber + 1;
+                let nextLine = lines[index + 1];
+                let nextLineStartsWithExpectedNumber = nextLine && nextLine.startsWith(`${expectedNextNumber}.`);
+
+                // Check if the current line continues a list or starts a new one expectedly
+                if (previousLineWasListItem && nextLineStartsWithExpectedNumber) {
+                    previousLineWasListItem = true; // It's part of a list
+                } else {
+                    // It's not part of a list, prevent Markdown interpretation
+                    line = line.replace(/^(\d+)\./, '$1.​');
+                    previousLineWasListItem = false;
+                }
+            }
+        } else {
+            previousLineWasListItem = false; // Reset for lines that are clearly not list items
+        }
+
+        processedLines.push(line);
+    });
+
+    return processedLines.join("<br>");
+}
+
+
 export const GuestBubble = (props: Props) => {
   let userMessageEl: HTMLDivElement | undefined;
 
   onMount(() => {
     if (userMessageEl) {
-      userMessageEl.innerHTML = Marked.parse(props.message.message);
+      let message = processMessage(props.message.message)//.replaceAll("\n", "<br>")
+      userMessageEl.innerHTML = /*props.message;*/Marked.parse(message)
     }
   });
 

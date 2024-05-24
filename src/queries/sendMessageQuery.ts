@@ -9,6 +9,8 @@ export type IncomingInput = {
   socketIOClientId?: string;
   chatId?: string;
   fileName?: string; // Only for assistant
+  webRequestChatId?: string;
+  timezone?: string;
 };
 
 export type MessageRequest = {

@@ -7,7 +7,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "rollup --watch --config rollup.config.js",
-    "build": "rollup --config rollup.config.js",
+    "build": "rollup --config rollup.config.js && shx cp dist/web.js D:/Dokumenty-D/futurebot.ai/aws/tests && shx cp dist/web.js D:/Dokumenty-D/futurebot.ai/aws/tests/scriptCopy",
     "lint": "eslint \"src/**/*.ts*\"",
     "lint-fix": "eslint --fix \"src/**/*.ts*\"",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,md,mdx}\"",
@@ -51,12 +51,13 @@
     "husky": "^8.0.0",
     "postcss": "8.4.21",
     "react": "18.2.0",
-    "rollup": "3.23.0",
+    "rollup": "^3.28.1",
     "rollup-plugin-livereload": "2.0.5",
     "rollup-plugin-postcss": "4.0.2",
     "rollup-plugin-serve": "2.0.2",
     "rollup-plugin-typescript-paths": "1.4.0",
     "rollup-plugin-uglify": "^6.0.4",
+	"shx": "^0.3.4",
     "tailwindcss": "3.3.1",
     "typescript": "5.0.3",
     "uuid": "^9.0.1"
