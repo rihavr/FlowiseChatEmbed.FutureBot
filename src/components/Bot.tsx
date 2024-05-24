@@ -127,27 +127,6 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
 
     const [isTypingSignal, setIsTypingSignal] = createSignal(getIsTyping());
 
-
-    const handleTypingChange = (newIsTyping) => {
-        console.log('handleTypingChange: ' + newIsTyping);
-        setIsTypingSignal(newIsTyping);
-    };
-
-    createEffect(() => {
-        // This function should run when the component mounts
-        const handleTypingChange = (newIsTyping) => {
-            setIsTypingSignal(newIsTyping);
-        };
-
-        // Register the listener
-        addIsTypingListener(handleTypingChange);
-
-        // Cleanup: Unregister the listener when the component unmounts
-        onCleanup(() => {
-            removeIsTypingListener(handleTypingChange);
-        });
-    });
-
     const [savedChatId, setSavedChatId] = createSignal('')
     const [webRequestChatId, setWebRequestChatId] = createSignal('')
     const [timezone, setTimezone] = createSignal('')
@@ -168,25 +147,6 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
     const [socketIOClientId, setSocketIOClientId] = createSignal('');
     const [isChatFlowAvailableToStream, setIsChatFlowAvailableToStream] = createSignal(false);
 
-
-    const chatHistoryIdentifier = 'chatHistory' + (props.isFullPage ? 'Inline' : '') + (props.chatflowConfig ? (props.chatflowConfig.botId ?? props.chatflowConfig.pineconeNamespace) : '');
-
-    const setMessagesWithStorage = (updateFunction) => {
-        setMessages((prevMessages) => {
-            const updatedMessages = updateFunction(prevMessages);
-            if(!props.chatflowConfig.clearOnRefresh)
-            {
-                const dataToSave = {
-                    chatId: savedChatId() || socketIOClientId() || webRequestChatId(),
-                    timestamp: Date.now(),
-                    messages: updatedMessages,
-                };
-                localStorage.setItem(chatHistoryIdentifier, JSON.stringify(dataToSave));
-            }
-            return updatedMessages;
-        });
-    };
-
     const [chatId, setChatId] = createSignal(
         (props.chatflowConfig?.vars as any)?.customerId ? `${(props.chatflowConfig?.vars as any).customerId.toString()}+${uuidv4()}` : uuidv4(),
     );
@@ -206,6 +166,44 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
 
     // drag & drop
     const [isDragActive, setIsDragActive] = createSignal(false);
+
+    const chatHistoryIdentifier = 'chatHistory' + (props.isFullPage ? 'Inline' : '') + (props.chatflowConfig ? (props.chatflowConfig.botId ?? props.chatflowConfig.pineconeNamespace) : '');
+
+    const setMessagesWithStorage = (updateFunction) => {
+        setMessages((prevMessages) => {
+            const updatedMessages = updateFunction(prevMessages);
+            if(!props.chatflowConfig.clearOnRefresh)
+            {
+                const dataToSave = {
+                    chatId: savedChatId() || socketIOClientId() || webRequestChatId(),
+                    timestamp: Date.now(),
+                    messages: updatedMessages,
+                };
+                localStorage.setItem(chatHistoryIdentifier, JSON.stringify(dataToSave));
+            }
+            return updatedMessages;
+        });
+    };
+
+    const handleTypingChange = (newIsTyping) => {
+        console.log('handleTypingChange: ' + newIsTyping);
+        setIsTypingSignal(newIsTyping);
+    };
+
+    createEffect(() => {
+        // This function should run when the component mounts
+        const handleTypingChange = (newIsTyping) => {
+            setIsTypingSignal(newIsTyping);
+        };
+
+        // Register the listener
+        addIsTypingListener(handleTypingChange);
+
+        // Cleanup: Unregister the listener when the component unmounts
+        onCleanup(() => {
+            removeIsTypingListener(handleTypingChange);
+        });
+    });
 
     onMount(() => {
         if(!props.chatflowConfig.clearOnRefresh)
