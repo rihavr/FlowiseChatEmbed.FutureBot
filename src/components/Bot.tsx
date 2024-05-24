@@ -125,12 +125,6 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
     let bottomSpacer: HTMLDivElement | undefined;
     let botContainer: HTMLDivElement | undefined;
 
-    const [isTypingSignal, setIsTypingSignal] = createSignal(getIsTyping());
-
-    const [savedChatId, setSavedChatId] = createSignal('')
-    const [webRequestChatId, setWebRequestChatId] = createSignal('')
-    const [timezone, setTimezone] = createSignal('')
-
     const [userInput, setUserInput] = createSignal('');
     const [loading, setLoading] = createSignal(false);
     const [sourcePopupOpen, setSourcePopupOpen] = createSignal(false);
@@ -146,13 +140,15 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
     );
     const [socketIOClientId, setSocketIOClientId] = createSignal('');
     const [isChatFlowAvailableToStream, setIsChatFlowAvailableToStream] = createSignal(false);
-
     const [chatId, setChatId] = createSignal(
         (props.chatflowConfig?.vars as any)?.customerId ? `${(props.chatflowConfig?.vars as any).customerId.toString()}+${uuidv4()}` : uuidv4(),
     );
     const [starterPrompts, setStarterPrompts] = createSignal<string[]>([], {equals: false});
     const [chatFeedbackStatus, setChatFeedbackStatus] = createSignal<boolean>(false);
     const [uploadsConfig, setUploadsConfig] = createSignal<UploadsConfig>();
+    const [leadsConfig, setLeadsConfig] = createSignal<LeadsConfig>();
+    const [isLeadSaved, setIsLeadSaved] = createSignal(false);
+    const [leadEmail, setLeadEmail] = createSignal('');
 
     // drag & drop file input
     // TODO: fix this type
@@ -166,6 +162,13 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
 
     // drag & drop
     const [isDragActive, setIsDragActive] = createSignal(false);
+
+    const [isTypingSignal, setIsTypingSignal] = createSignal(getIsTyping());
+
+    const [savedChatId, setSavedChatId] = createSignal('')
+    const [webRequestChatId, setWebRequestChatId] = createSignal('')
+    const [timezone, setTimezone] = createSignal('')
+
 
     const chatHistoryIdentifier = 'chatHistory' + (props.isFullPage ? 'Inline' : '') + (props.chatflowConfig ? (props.chatflowConfig.botId ?? props.chatflowConfig.pineconeNamespace) : '');
 
