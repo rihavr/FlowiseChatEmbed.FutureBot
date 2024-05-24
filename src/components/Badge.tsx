@@ -1,16 +1,18 @@
 import { onCleanup, onMount } from 'solid-js';
 
 type Props = {
-  botContainer: HTMLDivElement | undefined;
-  poweredByTextColor?: string;
-  badgeBackgroundColor?: string;
-};
+  botContainer: HTMLDivElement | undefined
+  poweredByTextColor?: string
+  badgeBackgroundColor?: string
+    policyUrl?: string
+}
 
 const defaultTextColor = '#303235';
 
 export const Badge = (props: Props) => {
-  let liteBadge: HTMLAnchorElement | undefined;
-  let observer: MutationObserver | undefined;
+  let liteBadge: HTMLAnchorElement | undefined
+    let policyLabel: HTMLAnchorElement | undefined
+  let observer: MutationObserver | undefined
 
   const appendBadgeIfNecessary = (mutations: MutationRecord[]) => {
     mutations.forEach((mutation) => {
@@ -44,18 +46,32 @@ export const Badge = (props: Props) => {
         'background-color': props.badgeBackgroundColor ?? '#ffffff',
       }}
     >
-      Powered by
+      Powered by&nbsp;
       <a
         ref={liteBadge}
-        href={'https://flowiseai.com'}
+        href={'https://futurebot.ai'}
         target="_blank"
         rel="noopener noreferrer"
         class="lite-badge"
         id="lite-badge"
         style={{ 'font-weight': 'bold', color: props.poweredByTextColor ?? defaultTextColor }}
       >
-        <span> Flowise</span>
-      </a>
+        <span>Futurebot.ai</span>
+      </a>{!!props.policyUrl && (
+          <>  |&nbsp;&nbsp;
+              <a
+                  ref={policyLabel}
+                  href={props.policyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="lite-badge"
+                  id="policy-label"
+                  style={{"font-weight": 'bold', color: props.poweredByTextColor ?? defaultTextColor}}
+              >
+                  <span>Zpracování osobních údajů</span>
+              </a>
+          </>
+        )}
     </span>
   );
 };

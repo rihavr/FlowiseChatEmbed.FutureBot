@@ -9,6 +9,8 @@ export type IncomingInput = {
   chatId?: string;
   fileName?: string; // Only for assistant
   leadEmail?: string;
+  webRequestChatId?: string;
+  timezone?: string;
 };
 
 export type MessageRequest = {

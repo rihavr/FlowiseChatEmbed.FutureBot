@@ -436,3 +436,48 @@ textarea {
   padding: 10px 10px;
   font-family: 'Poppins', sans-serif;
 }
+
+ol
+{
+    list-style: decimal;
+    padding-left: 20px;
+    display: inline-grid;
+    margin-block-end: 0px;
+    margin-block-start:  0px;
+}
+
+/*.whitespace-pre-wrap{
+    white-space: normal;
+}*/
+
+ul{
+    list-style: initial;
+    padding-left: 20px;
+}
+
+.clearChatButton {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    cursor: pointer;
+    z-index: 1001;
+    background-color: #ff5757; /* Slightly red background */
+    color: white; /* White text */
+    padding: 3px 8px; /* Adjust padding as needed */
+    border-radius: 0px 0px 0px 5px; /* Rounded corners */
+    /*margin: 10px; /* Add some margin if needed, though top and right are already positioning it */
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Adds a small gap between icon and text */
+}
+
+.clearChatButton.disabled {
+    cursor: not-allowed;
+    color: #eaeaea;
+    background-color: #ff9999; /* Slightly red background */
+}
+
+.textAdjust {
+     position: relative;
+     top: -1px; /* Moves the text 1 pixel up */
+ }
