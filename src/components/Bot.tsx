@@ -339,12 +339,6 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
         setLoading(true);
         scrollToBottom();
 
-        // Send user question and history to API
-        const welcomeMessage = props.welcomeMessage ?? defaultWelcomeMessage;
-        const messageList = messages().filter((msg) => msg.message !== welcomeMessage).map(m => {
-            return {'message': m.message, 'type': m.type}
-        });
-
         const urls = previews().map((item) => {
             return {
                 data: item.data,
@@ -355,6 +349,12 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
         });
 
         clearPreviews();
+
+        // Send user question and history to API
+        const welcomeMessage = props.welcomeMessage ?? defaultWelcomeMessage;
+        const messageList = messages().filter((msg) => msg.message !== welcomeMessage).map(m => {
+            return {'message': m.message, 'type': m.type}
+        });
 
         setMessagesWithStorage((prevMessages) => {
             const messages: MessageType[] = [...prevMessages, {message: value, type: 'userMessage', fileUploads: urls}];
@@ -370,6 +370,8 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
         if (urls && urls.length > 0) body.uploads = urls;
 
         if (props.chatflowConfig) body.overrideConfig = props.chatflowConfig;
+
+        if (leadEmail()) body.leadEmail = leadEmail();
 
         if (!useWebRequest() && isChatFlowAvailableToStream()) {
             body.socketIOClientId = socketIOClientId()
@@ -487,33 +489,6 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
             setSavedChatId(generateRandomString(10))
         }
     };
-
-    function generateRandomString(length) {
-        var result = '';
-        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        var charactersLength = characters.length;
-        for (var i = 0; i < length; i++) {
-            result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        }
-        return result;
-    }
-
-    function getBrowserTimezone() {
-        // Get the current timezone offset in minutes and invert the sign
-        const offset = -new Date().getTimezoneOffset();
-
-        // Convert the offset to hours and minutes
-        const absOffset = Math.abs(offset);
-        const hours = Math.floor(absOffset / 60);
-        const minutes = absOffset % 60;
-
-        // Format the timezone in the GMT±H or GMT±H:MM format
-        const sign = offset >= 0 ? "+" : "-";
-        const formattedHours = hours.toString().padStart(2, '0');
-        const formattedMinutes = minutes > 0 ? `:${minutes.toString().padStart(2, '0')}` : '';
-
-        return `GMT${sign}${formattedHours}${formattedMinutes}`;
-    }
 
     // Auto scroll chat to bottom
     createEffect(() => {
@@ -1177,6 +1152,33 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
             <Popup isOpen={sourcePopupOpen()} value={sourcePopupSrc()} onClose={() => setSourcePopupOpen(false)}/>}
         </>
     );
+
+    function generateRandomString(length) {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
+
+    function getBrowserTimezone() {
+        // Get the current timezone offset in minutes and invert the sign
+        const offset = -new Date().getTimezoneOffset();
+
+        // Convert the offset to hours and minutes
+        const absOffset = Math.abs(offset);
+        const hours = Math.floor(absOffset / 60);
+        const minutes = absOffset % 60;
+
+        // Format the timezone in the GMT±H or GMT±H:MM format
+        const sign = offset >= 0 ? "+" : "-";
+        const formattedHours = hours.toString().padStart(2, '0');
+        const formattedMinutes = minutes > 0 ? `:${minutes.toString().padStart(2, '0')}` : '';
+
+        return `GMT${sign}${formattedHours}${formattedMinutes}`;
+    }
 };
 
 // type BottomSpacerProps = {
