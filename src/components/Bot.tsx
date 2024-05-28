@@ -191,7 +191,7 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
     const setMessagesWithStorage = (updateFunction) => {
         setMessages((prevMessages) => {
             const updatedMessages = updateFunction(prevMessages);
-            if(!props.chatflowConfig.clearOnRefresh)
+            if(props.chatflowConfig && !props.chatflowConfig.clearOnRefresh)
             {
                 const dataToSave = {
                     chatId: savedChatId() || socketIOClientId() || webRequestChatId(),
@@ -225,7 +225,7 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
     });
 
     onMount(() => {
-        if(!props.chatflowConfig.clearOnRefresh)
+        if(props.chatflowConfig && !props.chatflowConfig.clearOnRefresh)
         {
             const savedData = JSON.parse(localStorage.getItem(chatHistoryIdentifier));
             if (savedData) {
@@ -916,7 +916,7 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
                 class={'relative flex w-full h-full text-base overflow-hidden bg-cover bg-center flex-col items-center chatbot-container ' + props.class}
                 onDragEnter={handleDrag}
             >
-                <Show when={props.chatflowConfig.showClearButton && messages().length >= 3}>
+                <Show when={props.chatflowConfig?.showClearButton && messages().length >= 3}>
                     <div className={`clearChatButton ${isTypingSignal() ? 'disabled' : ''}`} onClick={clearChat}
                          style={{pointerEvents: isTypingSignal() ? 'none' : 'auto'}}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor"

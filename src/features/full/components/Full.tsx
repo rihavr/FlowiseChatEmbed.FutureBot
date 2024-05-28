@@ -8,12 +8,32 @@ const defaultIconColor = 'white';
 
 export type FullProps = BotProps & BubbleParams;
 
+export { markInitializationComplete };
+
+let isInitialized = false;
+let resolveInitialization;
+const initializationPromise = new Promise((resolve) => {
+    resolveInitialization = resolve;
+});
+
+// This function should be called from initFull in window.ts when initialization is complete
+function markInitializationComplete() {
+    isInitialized = true;
+    resolveInitialization();
+    console.log('Bot initialization marked complete');
+}
+
 export const Full = (props: FullProps, { element }: { element: HTMLElement }) => {
   const [isBotDisplayed, setIsBotDisplayed] = createSignal(false);
 
-  const launchBot = () => {
-    setIsBotDisplayed(true);
-  };
+
+    async function launchBot() {
+        if (!isInitialized) {
+            await initializationPromise;  // Wait for the initialization to complete
+        }
+        console.log('Launching bot');
+        setIsBotDisplayed(true);
+    }
 
   const botLauncherObserver = new IntersectionObserver((intersections) => {
     if (intersections.some((intersection) => intersection.isIntersecting)) launchBot();

@@ -1,5 +1,7 @@
 import { observersConfigType } from './components/Bot';
 
+import { markInitializationComplete } from './features/full/components/Full.tsx';
+
 /* eslint-disable solid/reactivity */
 type BotProps = {
   chatflowid: string;
@@ -16,6 +18,7 @@ export const initFull = (props: BotProps & { id?: string }) => {
   if (!fullElement) throw new Error('<flowise-fullchatbot> element not found.');
   Object.assign(fullElement, props);
   elementUsed = fullElement;
+    markInitializationComplete();
 };
 
 export const init = (props: BotProps) => {
