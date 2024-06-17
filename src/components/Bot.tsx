@@ -184,9 +184,10 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
     const [savedChatId, setSavedChatId] = createSignal('')
     const [webRequestChatId, setWebRequestChatId] = createSignal('')
     const [timezone, setTimezone] = createSignal('')
-
+    const [limitId, setLimitId] = createSignal('')
 
     const chatHistoryIdentifier = 'chatHistory' + (props.isFullPage ? 'Inline' : '') + (props.chatflowConfig ? (props.chatflowConfig.botId ?? props.chatflowConfig.pineconeNamespace) : '');
+    const sessionLimitIdentifier = 'chatLimit' + (props.chatflowConfig ? (props.chatflowConfig.expertProfileUid ?? (props.chatflowConfig.botId ?? props.chatflowConfig.pineconeNamespace)) : '');
 
     const setMessagesWithStorage = (updateFunction) => {
         setMessages((prevMessages) => {
@@ -225,6 +226,15 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
     });
 
     onMount(() => {
+
+        const savedSessionLimitId = localStorage.getItem(sessionLimitIdentifier);
+        if (savedSessionLimitId && savedSessionLimitId !== 'function () { [native code] }')
+            setLimitId(savedSessionLimitId);
+        else {
+            setLimitId(generateRandomString(10))
+            localStorage.setItem(sessionLimitIdentifier, limitId());
+        }
+
         if(props.chatflowConfig && !props.chatflowConfig.clearOnRefresh)
         {
             const savedData = JSON.parse(localStorage.getItem(chatHistoryIdentifier));
@@ -397,6 +407,9 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
             body.webRequestChatId = savedChatId() || webRequestChatId()
             body.timezone = timezone()
         }
+
+        if (limitId())
+            body.limitId = limitId();
 
         const result = await sendMessageQuery({
             chatflowid: props.chatflowid,

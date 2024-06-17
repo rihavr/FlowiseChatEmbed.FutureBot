@@ -7,6 +7,7 @@ export type IncomingInput = {
   overrideConfig?: Record<string, unknown>;
   socketIOClientId?: string;
   chatId?: string;
+    limitId?: string;
   fileName?: string; // Only for assistant
   leadEmail?: string;
   webRequestChatId?: string;

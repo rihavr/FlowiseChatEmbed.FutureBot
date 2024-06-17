@@ -5,6 +5,7 @@ export type IncomingInput = {
     overrideConfig?: Record<string, unknown>;
     socketIOClientId?: string;
     chatId?: string;
+    limitId?: string;
     fileName?: string;
     leadEmail?: string;
     webRequestChatId?: string;
