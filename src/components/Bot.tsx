@@ -242,7 +242,7 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
                 const currentTime = Date.now();
                 const timeElapsed = currentTime - savedData.timestamp;
 
-                if (props.chatflowConfig.infiniteMemory || timeElapsed <= 432){//00000) { // 12 hours
+                if (props.chatflowConfig.infiniteMemory || timeElapsed <= 43200000) { // 12 hours
                     setMessages(savedData.messages)
                     if(savedData.chatId)
                     {
@@ -751,7 +751,7 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
             });
         }
         if (!acceptFile) {
-            alert(`Cannot upload file. Kindly check the allowed file types and maximum allowed size.`);
+            alert(`Soubor je příliš velký nebo není správného typu.`);
         }
         return acceptFile;
     };
