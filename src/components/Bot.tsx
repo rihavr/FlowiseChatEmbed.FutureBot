@@ -154,6 +154,15 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
         ],
         {equals: false},
     );
+    const [messagesPersistent, setMessagesPersistent] = createSignal<MessageType[]>(
+        [
+            {
+                message: props.welcomeMessage ?? defaultWelcomeMessage,
+                type: 'apiMessage',
+            },
+        ],
+        {equals: false},
+    );
     const [socketIOClientId, setSocketIOClientId] = createSignal('');
     const [isChatFlowAvailableToStream, setIsChatFlowAvailableToStream] = createSignal(false);
     const [chatId, setChatId] = createSignal(
@@ -190,19 +199,36 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
     const sessionLimitIdentifier = 'chatLimit' + (props.chatflowConfig ? (props.chatflowConfig.expertProfileUid ?? (props.chatflowConfig.botId ?? props.chatflowConfig.pineconeNamespace)) : '');
 
     const setMessagesWithStorage = (updateFunction) => {
+
+
         setMessages((prevMessages) => {
             const updatedMessages = updateFunction(prevMessages);
-            if(props.chatflowConfig && !props.chatflowConfig.clearOnRefresh)
-            {
+            return updatedMessages;
+        });
+
+        if(props.chatflowConfig && !props.chatflowConfig.clearOnRefresh)
+        {
+            setMessagesPersistent((prevMessages) => {
+                const updatedMessages = updateFunction(prevMessages);
+                let messagesToSave = updatedMessages.map(message => {
+                    let {fileUploads, ...rest} = message;
+                    if (fileUploads) {
+                        // Create a new array of file uploads without the .data field
+                        fileUploads = fileUploads.map(({data, ...fileRest}) => fileRest);
+                    }
+                    return {...rest, fileUploads};
+                });
+
                 const dataToSave = {
                     chatId: savedChatId() || socketIOClientId() || webRequestChatId(),
                     timestamp: Date.now(),
-                    messages: updatedMessages,
+                    messages: messagesToSave,
                 };
                 localStorage.setItem(chatHistoryIdentifier, JSON.stringify(dataToSave));
-            }
-            return updatedMessages;
-        });
+
+                return updatedMessages;
+            });
+        }
     };
 
     const handleTypingChange = (newIsTyping) => {
@@ -244,6 +270,7 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
 
                 if (props.chatflowConfig.infiniteMemory || timeElapsed <= 43200000) { // 12 hours
                     setMessages(savedData.messages)
+                    setMessagesPersistent(savedData.messages)
                     if(savedData.chatId)
                     {
                         setSavedChatId(savedData.chatId);
@@ -445,6 +472,7 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
                                     type: file.type,
                                     name: file.name,
                                     mime: file.mime,
+                                    data: file.data
                                 }));
                                 return {...item, fileUploads};
                             }
@@ -512,6 +540,12 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
             return;
         localStorage.removeItem(chatHistoryIdentifier); // Use the existing chatHistoryIdentifier variable
         setMessages([
+            {
+                message: props.welcomeMessage ?? defaultWelcomeMessage, // Use the existing defaultWelcomeMessage variable or props
+                type: 'apiMessage'
+            }
+        ]);
+        setMessagesPersistent([
             {
                 message: props.welcomeMessage ?? defaultWelcomeMessage, // Use the existing defaultWelcomeMessage variable or props
                 type: 'apiMessage'
@@ -751,7 +785,7 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
             });
         }
         if (!acceptFile) {
-            alert(`Soubor je příliš velký nebo není správného typu.`);
+            alert(`Soubor musí být obrázek, menší než 5MB.`);
         }
         return acceptFile;
     };
