@@ -196,7 +196,7 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
     const [limitId, setLimitId] = createSignal('')
 
     const chatHistoryIdentifier = 'chatHistory' + (props.isFullPage ? 'Inline' : '') + (props.chatflowConfig ? (props.chatflowConfig.botId ?? props.chatflowConfig.pineconeNamespace) : '');
-    const sessionLimitIdentifier = 'chatLimit' + (props.chatflowConfig ? (props.chatflowConfig.expertProfileUid ?? (props.chatflowConfig.botId ?? props.chatflowConfig.pineconeNamespace)) : '');
+    const sessionLimitIdentifier = 'chatLimit' + (props.chatflowConfig ? ((props.chatflowConfig.wpUid ?? props.chatflowConfig.expertProfileUid) ?? (props.chatflowConfig.botId ?? props.chatflowConfig.pineconeNamespace)) : '');
 
     const setMessagesWithStorage = (updateFunction) => {
 
