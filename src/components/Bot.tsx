@@ -195,7 +195,7 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
     const [timezone, setTimezone] = createSignal('')
     const [limitId, setLimitId] = createSignal('')
 
-    const chatHistoryIdentifier = 'chatHistory' + (props.isFullPage ? 'Inline' : '') + (props.chatflowConfig ? (props.chatflowConfig.botId ?? props.chatflowConfig.pineconeNamespace) : '');
+    const chatHistoryIdentifier = 'chatHistory' + (props.isFullPage ? 'Inline' : '') + (props.chatflowConfig ? (props.chatflowConfig.botId ?? (props.chatflowConfig.pineconeNamespace ?? props.chatflowConfig.instanceId)) : '');
     const sessionLimitIdentifier = 'chatLimit' + (props.chatflowConfig ? ((props.chatflowConfig.wpUid ?? props.chatflowConfig.expertProfileUid) ?? (props.chatflowConfig.botId ?? props.chatflowConfig.pineconeNamespace)) : '');
 
     const setMessagesWithStorage = (updateFunction) => {
@@ -1251,7 +1251,7 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
                     </div>
                     <Badge badgeBackgroundColor={props.badgeBackgroundColor}
                            poweredByTextColor={props.poweredByTextColor} policyUrl={props.chatflowConfig?.policyUrl}
-                           botContainer={botContainer}/>
+                           botContainer={botContainer} showCreditsCost={props.chatflowConfig?.showCreditsCost}/>
                 </div>
             </div>
             {sourcePopupOpen() &&

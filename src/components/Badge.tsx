@@ -5,6 +5,7 @@ type Props = {
   poweredByTextColor?: string
   badgeBackgroundColor?: string
     policyUrl?: string
+    showCreditsCost?: bool
 }
 
 const defaultTextColor = '#303235';
@@ -45,7 +46,10 @@ export const Badge = (props: Props) => {
         color: props.poweredByTextColor ?? defaultTextColor,
         'background-color': props.badgeBackgroundColor ?? '#ffffff',
       }}
-    >
+    >{props.showCreditsCost ? (
+        <span>Cena za zprávu: 5 kreditů</span>
+    ) : (
+        <>
       Powered by&nbsp;
       <a
         ref={liteBadge}
@@ -57,7 +61,8 @@ export const Badge = (props: Props) => {
         style={{ 'font-weight': 'bold', color: props.poweredByTextColor ?? defaultTextColor }}
       >
         <span>Futurebot.ai</span>
-      </a>{!!props.policyUrl && (
+      </a>
+          </>)}{!!props.policyUrl && (
           <>  |&nbsp;&nbsp;
               <a
                   ref={policyLabel}
